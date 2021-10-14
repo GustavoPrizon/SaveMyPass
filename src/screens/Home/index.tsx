@@ -33,18 +33,33 @@ export function Home() {
     // Get asyncStorage data, use setSearchListData and setData
 
     const res = await AsyncStorage.getItem(dataKey);
-    const parseData = JSON.parse(res);
+    if (res) {
+      const parseData = JSON.parse(res);
 
-    setSearchListData(res);
-    setData(res);
+      setSearchListData(parseData);
+      setData(parseData);
+    }
   }
 
   function handleFilterLoginData() {
     // Filter results inside data, save with setSearchListData
+    const filterData = searchListData.filter((data) => {
+      const isValid = data.service_name
+        .toLowerCase()
+        .includes(searchText.toLowerCase());
+      if (isValid) {
+        return data;
+      }
+    });
+    setSearchListData(filterData);
   }
 
   function handleChangeInputText(text: string) {
     // Update searchText value
+    if (!text) {
+      setSearchListData(data);
+    }
+    setSearchText(text);
   }
 
   useFocusEffect(
